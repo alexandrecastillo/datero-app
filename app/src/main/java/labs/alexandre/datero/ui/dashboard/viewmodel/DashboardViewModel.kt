@@ -1,8 +1,11 @@
 package labs.alexandre.datero.ui.dashboard.viewmodel
 
 import android.os.SystemClock
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -10,32 +13,52 @@ import kotlinx.coroutines.launch
 import labs.alexandre.datero.ui.dashboard.model.BusLineUiModel
 import labs.alexandre.datero.ui.dashboard.model.BusTimestampUiModel
 import labs.alexandre.datero.ui.dashboard.model.BusUiState
+import labs.alexandre.datero.ui.dashboard.model.DashboardUiState
+import java.util.UUID
 import kotlin.random.Random
 
 class DashboardViewModel() : ViewModel() {
+
+    private val _uiState = mutableStateOf<DashboardUiState>(DashboardUiState.Idle)
+    val uiState: State<DashboardUiState> = _uiState
 
     private val _busLines = mutableStateMapOf<String, BusLineUiModel>()
     val busLines: SnapshotStateMap<String, BusLineUiModel> = _busLines
 
     init {
-        (1..10).forEach { lineId ->
-            _busLines[lineId.toString()] = BusLineUiModel(
-                id = lineId.toString(),
-                name = "Línea $lineId",
-                colors = listOf(),
-                timestamps = SnapshotStateMap<String, BusTimestampUiModel>().apply {
-                    (1..8).forEach { busId ->
-                        this[busId.toString()] = BusTimestampUiModel(
-                            id = busId.toString(),
-                            elapsedTime = System.currentTimeMillis(),
-                            BusUiState.LOW
-                        )
+        viewModelScope.launch {
+            delay(1000)
+            _uiState.value = DashboardUiState.Success
+            (1..10).forEach { lineId ->
+                _busLines[lineId.toString()] = BusLineUiModel(
+                    id = lineId.toString(),
+                    name = "Línea $lineId",
+                    colors = listOf(Color(0xFFFFFFFF), Color(0xFFFFB344)),
+                    timestamps = SnapshotStateMap<String, BusTimestampUiModel>().apply {
+                        (1..8).forEach { busId ->
+                            val uuid = UUID.randomUUID().toString()
+                            this[busId.toString()] = BusTimestampUiModel(
+                                id = busId.toString(),
+                                elapsedTime = Random.nextLong(1000, 5990000),
+                                state = BusUiState.entries[Random.nextInt(0, BusUiState.entries.size)]
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 
+    fun onClick(busLineId: String) {
+        viewModelScope.launch {
+            val uuid = UUID.randomUUID().toString()
+            _busLines[busLineId]?.timestamps[uuid] = BusTimestampUiModel(
+                id = uuid,
+                elapsedTime = Random.nextLong(1000, 5990000),
+                state = BusUiState.entries[Random.nextInt(0, BusUiState.entries.size)]
+            )
+        }
+    }
 
     fun onMarkBusLineClick(busLineUiModel: BusLineUiModel) {
         _busLines[busLineUiModel.id]?.let { busLine ->
