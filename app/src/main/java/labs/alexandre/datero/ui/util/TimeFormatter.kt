@@ -7,9 +7,14 @@ object TimeFormatter {
             elapsedTimeInMillis < Time.ONE_MINUTE_IN_MS -> {
                 TimeFormat.Seconds((elapsedTimeInMillis / 1000) % 60)
             }
+
             elapsedTimeInMillis < Time.ONE_HOUR_IN_MS -> {
-                TimeFormat.Minutes((elapsedTimeInMillis / 60_000) % 60)
+                TimeFormat.MinutesAndSeconds(
+                    minutes = (elapsedTimeInMillis / 60_000) % 60,
+                    seconds = (elapsedTimeInMillis / 1000) % 60
+                )
             }
+
             else -> {
                 TimeFormat.HoursAndMinutes(
                     hours = elapsedTimeInMillis / (1000 * 60 * 60),
@@ -21,7 +26,7 @@ object TimeFormatter {
 
     sealed class TimeFormat {
         data class Seconds(val seconds: Long) : TimeFormat()
-        data class Minutes(val minutes: Long) : TimeFormat()
+        data class MinutesAndSeconds(val minutes: Long, val seconds: Long) : TimeFormat()
         data class HoursAndMinutes(val hours: Long, val minutes: Long) : TimeFormat()
     }
 
