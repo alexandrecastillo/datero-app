@@ -22,7 +22,7 @@ fun BusLineFlag(
         modifier = Modifier
             .border(1.dp, Color.DarkGray)
             .padding(1.dp)
-            .defaultMinSize(36.dp, 28.dp)
+            .size(36.dp, 24.dp)
             .then(modifier)
     ) {
         val stripeCount = colors.size.takeIf { it > 0 } ?: 1
