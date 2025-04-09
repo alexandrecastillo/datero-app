@@ -9,6 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import labs.alexandre.datero.ui.dashboard.model.BusLineUiModel
 import labs.alexandre.datero.ui.dashboard.model.BusTimestampUiModel
@@ -19,8 +21,8 @@ import kotlin.random.Random
 
 class DashboardViewModel() : ViewModel() {
 
-    private val _uiState = mutableStateOf<DashboardUiState>(DashboardUiState.Idle)
-    val uiState: State<DashboardUiState> = _uiState
+    private val _uiState = MutableStateFlow<DashboardUiState>(DashboardUiState.Idle)
+    val uiState: StateFlow<DashboardUiState> = _uiState
 
     private val _busLines = mutableStateMapOf<String, BusLineUiModel>()
     val busLines: SnapshotStateMap<String, BusLineUiModel> = _busLines

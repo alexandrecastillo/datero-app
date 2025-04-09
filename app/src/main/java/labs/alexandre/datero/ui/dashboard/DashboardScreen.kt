@@ -10,12 +10,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import labs.alexandre.datero.R
 import labs.alexandre.datero.ui.dashboard.components.BusLineList
 import labs.alexandre.datero.ui.dashboard.model.BusLineUiModel
@@ -30,7 +32,8 @@ import kotlin.random.Random
 fun DashboardScreen(
     dashboardViewModel: DashboardViewModel = hiltViewModel()
 ) {
-    val uiState = dashboardViewModel.uiState.value
+    val uiState by dashboardViewModel.uiState.collectAsStateWithLifecycle()
+
     val busLinesList = dashboardViewModel.busLines
 
     DashboardScreenSkeleton(
