@@ -48,7 +48,7 @@ fun TimestampItem(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        BusElapsedTime(
+        ElapsedTime(
             timeFormat = TimeFormatter.transform(busTimestamp.elapsedTime)
         )
         Icon(
@@ -60,18 +60,37 @@ fun TimestampItem(
 }
 
 @Composable
-fun BusElapsedTime(
+fun ElapsedTime(
     timeFormat: TimeFormat
 ) {
     Text(
         text = buildAnnotatedString {
             when (timeFormat) {
-                is TimeFormat.Seconds -> AppendSeconds(timeFormat.seconds)
-                is TimeFormat.Minutes -> AppendMinutes(timeFormat.minutes)
-                is TimeFormat.HoursAndMinutes -> AppendHoursAndMinutes(
-                    timeFormat.hours,
-                    timeFormat.minutes
-                )
+                is TimeFormat.Seconds -> {
+                    AppendSeconds(
+                        seconds = timeFormat.seconds
+                    )
+                }
+
+                is TimeFormat.MinutesAndSeconds -> {
+                    AppendMinutesAndSeconds(
+                        minutes = timeFormat.minutes,
+                        seconds = timeFormat.seconds
+                    )
+                }
+
+                is TimeFormat.Minutes -> {
+                    AppendMinutes(
+                        minutes = timeFormat.minutes
+                    )
+                }
+
+                is TimeFormat.HoursAndMinutes -> {
+                    AppendHoursAndMinutes(
+                        hours = timeFormat.hours,
+                        minutes = timeFormat.minutes
+                    )
+                }
             }
         },
         color = Color.White,
@@ -86,7 +105,7 @@ fun BusElapsedTime(
 }
 
 @Composable
-private fun AnnotatedString.Builder.AppendSeconds(seconds: Long) {
+private fun AnnotatedString.Builder.AppendSeconds(seconds: Int) {
     withStyle(MaterialTheme.typography.labelMedium.toSpanStyle()) {
         append(seconds.toString())
     }
@@ -97,7 +116,7 @@ private fun AnnotatedString.Builder.AppendSeconds(seconds: Long) {
 }
 
 @Composable
-private fun AnnotatedString.Builder.AppendMinutes(minutes: Long) {
+private fun AnnotatedString.Builder.AppendMinutes(minutes: Int) {
     withStyle(MaterialTheme.typography.labelMedium.toSpanStyle()) {
         append(minutes.toString())
     }
@@ -107,8 +126,26 @@ private fun AnnotatedString.Builder.AppendMinutes(minutes: Long) {
     }
 }
 
+
 @Composable
-private fun AnnotatedString.Builder.AppendHoursAndMinutes(hours: Long, minutes: Long) {
+private fun AnnotatedString.Builder.AppendMinutesAndSeconds(minutes: Int, seconds: Int) {
+    withStyle(MaterialTheme.typography.labelMedium.toSpanStyle()) {
+        append(minutes.toString())
+    }
+    withStyle(MaterialTheme.typography.bodySmall.toSpanStyle()) {
+        append("m")
+    }
+    appendLine()
+    withStyle(MaterialTheme.typography.labelMedium.toSpanStyle()) {
+        append(seconds.toString())
+    }
+    withStyle(MaterialTheme.typography.bodySmall.toSpanStyle()) {
+        append("s")
+    }
+}
+
+@Composable
+private fun AnnotatedString.Builder.AppendHoursAndMinutes(hours: Int, minutes: Int) {
     withStyle(MaterialTheme.typography.labelMedium.toSpanStyle()) {
         append(hours.toString())
     }
@@ -132,23 +169,23 @@ fun PreviewTimestampItem() {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             TimestampItem(
-                busTimestamp = BusTimestampUiModel("1", 59_000, BusUiState.OVER_FULL),
+                busTimestamp = BusTimestampUiModel("1", 59_000, 59_000, BusUiState.OVER_FULL),
                 onBusTimestampClick = {}
             )
             TimestampItem(
-                busTimestamp = BusTimestampUiModel("2", 4_000, BusUiState.FULL),
+                busTimestamp = BusTimestampUiModel("2", 4_000, 4_000, BusUiState.FULL),
                 onBusTimestampClick = {}
             )
             TimestampItem(
-                busTimestamp = BusTimestampUiModel("3", 888000, BusUiState.NORMAL),
+                busTimestamp = BusTimestampUiModel("3", 888000, 888_000, BusUiState.NORMAL),
                 onBusTimestampClick = {}
             )
             TimestampItem(
-                busTimestamp = BusTimestampUiModel("4", 14587777, BusUiState.LOW),
+                busTimestamp = BusTimestampUiModel("4", 14587777, 14_587_777, BusUiState.LOW),
                 onBusTimestampClick = {}
             )
             TimestampItem(
-                busTimestamp = BusTimestampUiModel("5", 4990000, BusUiState.VERY_LOW),
+                busTimestamp = BusTimestampUiModel("5", 566000, 566_000, BusUiState.VERY_LOW),
                 onBusTimestampClick = {}
             )
         }
