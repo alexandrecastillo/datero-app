@@ -1,17 +1,24 @@
 package labs.alexandre.datero.ui.dashboard.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -24,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -128,13 +136,16 @@ fun PreviewHeaderBusLine() {
                 "1",
                 "Línea E",
                 colors = listOf(
-                    Color(0xFFFFFFFF), Color(0xFFFFB344)
+                    "#FFFFFFFF",
+                    "#FFFFB344"
                 ),
+                position = 0,
                 timestamps = SnapshotStateMap<String, BusTimestampUiModel>().apply {
                     (1..8).forEach { busId ->
                         this[busId.toString()] = BusTimestampUiModel(
                             busId.toString(),
                             Random.nextLong(1000, 5990000),
+                            0L,
                             BusUiState.entries[Random.nextInt(0, BusUiState.entries.size)]
                         )
                     }
@@ -163,7 +174,7 @@ fun BusLineItem(
         HeaderBusLine(
             busLine = busLine,
             onBusLineClick = onBusLineClick,
-            onMarkBusLineClick = { onMarkBusLineClick.invoke(busLine) }
+            onMarkBusLineClick = { onMarkBusLineClick.invoke(busLine) },
         )
         ContentBusLine(
             timestamps = busLine.timestamps,
@@ -206,17 +217,19 @@ fun PreviewBusLineItem() {
                 id = "1",
                 name = "Línea Chama",
                 colors = listOf(
-                    Color(0xFFD73939),
-                    Color(0xFF196320),
-                    Color(0xFF20882B),
-                    Color(0xFFF8F8F8),
-                    Color(0xFFD73939)
+                    "#FFD73939",
+                    "#FF196320",
+                    "#FF20882B",
+                    "#FFF8F8F8",
+                    "#FFD73939"
                 ),
+                position = 0,
                 timestamps = SnapshotStateMap<String, BusTimestampUiModel>().apply {
                     (1..8).forEach { busId ->
                         this[busId.toString()] = BusTimestampUiModel(
                             busId.toString(),
                             Random.nextLong(1000, 5990000),
+                            0L,
                             BusUiState.entries[Random.nextInt(0, BusUiState.entries.size)]
                         )
                     }
@@ -226,4 +239,106 @@ fun PreviewBusLineItem() {
             onBusTimestampClick = {}
         )
     }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun BusLineItemPlaceholder() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp, 12.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(24.dp)
+                    .width(186.dp)
+                    .background(Color.LightGray),
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(114.dp)
+                    .background(Color.LightGray),
+            )
+        }
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(76.dp)
+                    .background(Color.LightGray),
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(76.dp)
+                    .background(Color.LightGray),
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(76.dp)
+                    .background(Color.LightGray),
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(76.dp)
+                    .background(Color.LightGray),
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(76.dp)
+                    .background(Color.LightGray),
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(76.dp)
+                    .background(Color.LightGray),
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(76.dp)
+                    .background(Color.LightGray),
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .height(40.dp)
+                    .width(76.dp)
+                    .background(Color.LightGray),
+            )
+        }
+    }
+}
+
+@Composable
+@Preview
+fun PreviewBusLineItemPlaceholder() {
+    BusLineItemPlaceholder()
 }
