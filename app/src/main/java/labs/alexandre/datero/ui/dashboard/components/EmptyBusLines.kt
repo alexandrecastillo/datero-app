@@ -72,7 +72,6 @@ fun EmptyBusLines(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .padding(48.dp)
             .offset(y = (-32).dp)
             .then(modifier),
@@ -80,7 +79,7 @@ fun EmptyBusLines(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = "El tablero esta vació",
@@ -88,7 +87,7 @@ fun EmptyBusLines(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = "Agrega una nueva línea de bus para marcar sus tiempos",
@@ -103,6 +102,9 @@ fun EmptyBusLines(
 @Composable
 fun PreviewEmptyBusLines() {
     DateroTheme {
-        EmptyBusLines(onAddBusLineClick = {})
+        EmptyBusLines(
+            modifier = Modifier.fillMaxSize(),
+            onAddBusLineClick = {}
+        )
     }
 }
