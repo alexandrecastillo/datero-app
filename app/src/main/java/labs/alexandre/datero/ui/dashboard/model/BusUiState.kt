@@ -3,7 +3,7 @@ package labs.alexandre.datero.ui.dashboard.model
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import labs.alexandre.datero.R
-import labs.alexandre.datero.domain.model.BusState
+import labs.alexandre.datero.domain.enums.BusState
 import labs.alexandre.datero.ui.theme.FullColor
 import labs.alexandre.datero.ui.theme.LowColor
 import labs.alexandre.datero.ui.theme.NormalColor
