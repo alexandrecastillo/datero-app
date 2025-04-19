@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import labs.alexandre.datero.ui.dashboard.model.BusTimestampUiModel
 import labs.alexandre.datero.ui.dashboard.model.BusUiState
+import labs.alexandre.datero.ui.theme.DateroTheme
 import kotlin.random.Random
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -23,7 +24,11 @@ fun BusTimestampList(
     timestamps: SnapshotStateMap<String, BusTimestampUiModel>,
     onBusTimestampClick: (BusTimestampUiModel) -> Unit
 ) {
-    val busesList by remember { derivedStateOf { timestamps.entries.toList() } }
+    val busesList by remember {
+        derivedStateOf {
+            timestamps.values.sortedByDescending { it.timestamp }
+        }
+    }
 
     FlowRow(
         modifier = Modifier
@@ -32,7 +37,7 @@ fun BusTimestampList(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        busesList.forEach { (_, busTimestamp) ->
+        busesList.forEach { busTimestamp ->
             TimestampItem(
                 busTimestamp = busTimestamp,
                 onBusTimestampClick = onBusTimestampClick
@@ -44,17 +49,20 @@ fun BusTimestampList(
 @Preview
 @Composable
 fun PreviewBusTimestampList() {
-    BusTimestampList(
-        timestamps = SnapshotStateMap<String, BusTimestampUiModel>().apply {
-            (1..8).forEach { busId ->
-                this[busId.toString()] =
-                    BusTimestampUiModel(
-                        busId.toString(),
-                        Random.nextLong(1000, 5990000),
-                        BusUiState.entries[Random.nextInt(0, BusUiState.entries.size)]
-                    )
-            }
-        },
-        onBusTimestampClick = {}
-    )
+    DateroTheme {
+        BusTimestampList(
+            timestamps = SnapshotStateMap<String, BusTimestampUiModel>().apply {
+                (1..8).forEach { busId ->
+                    this[busId.toString()] =
+                        BusTimestampUiModel(
+                            busId.toString(),
+                            Random.nextLong(1000, 5990000),
+                            0L,
+                            BusUiState.entries[Random.nextInt(0, BusUiState.entries.size)]
+                        )
+                }
+            },
+            onBusTimestampClick = {}
+        )
+    }
 }
