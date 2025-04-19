@@ -10,7 +10,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.03.01"
 colorpicker = "1.1.2"
 ksp = "2.0.21-1.0.27"
-hilt = "2.51.1"
+hilt = "2.56.1"
 hiltNavigationCompose = "1.2.0"
 
 [libraries]
