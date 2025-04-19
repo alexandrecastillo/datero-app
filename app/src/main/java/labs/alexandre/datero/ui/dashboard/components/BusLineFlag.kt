@@ -2,7 +2,6 @@ package labs.alexandre.datero.ui.dashboard.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -12,11 +11,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 
 @Composable
 fun BusLineFlag(
     modifier: Modifier = Modifier,
-    colors: List<Color>,
+    colors: List<String>,
 ) {
     Canvas(
         modifier = Modifier
@@ -28,9 +28,9 @@ fun BusLineFlag(
         val stripeCount = colors.size.takeIf { it > 0 } ?: 1
         val stripeHeight = size.height / stripeCount
 
-        colors.forEachIndexed { index, color ->
+        colors.forEachIndexed { index, colorHex ->
             drawRect(
-                color = color,
+                color = Color(colorHex.toColorInt()),
                 topLeft = Offset(0f, index * stripeHeight),
                 size = Size(size.width, stripeHeight)
             )
@@ -44,8 +44,6 @@ fun PreviewBusLineFlag() {
     BusLineFlag(
         modifier = Modifier
             .size(52.dp, 32.dp),
-        colors = listOf(
-            Color(0xFFEB1319), Color(0xFFFF5722), Color(0xFFFFC107), Color(0xFFFFFFFF)
-        )
+        colors = listOf("#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF")
     )
 }
