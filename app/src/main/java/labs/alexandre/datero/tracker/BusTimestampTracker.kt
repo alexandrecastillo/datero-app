@@ -7,114 +7,120 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import labs.alexandre.datero.manager.TimestampSnapshotManager
 import java.util.TreeSet
 import kotlin.math.max
 
-data class BusParam(
-    val id: String, val name: String, val timestamp: Long
+data class TimestampBusLineParam(
+    val busLineId: Long,
+    val timestampId: Long,
+    val timestamp: Long
 )
 
-data class BusTrack(
-    val id: String, val name: String, val timestamp: Long, val triggerAtElapsedSinceBoot: Long
+data class TimestampTrack(
+    val busLineId: Long,
+    val timestampId: Long,
+    val timestamp: Long,
+    val triggerAtElapsedSinceBoot: Long
+)
+
+data class UpdateTimestamp(
+    val busLineId: Long,
+    val timestampId: Long,
+    val timestamp: Long,
+    val elapsedTime: Long
 )
 
 class BusTimestampTracker(
-    private val timestampSnapshot: TimestampSnapshot
+    private val timestampSnapshotManager: TimestampSnapshotManager
 ) {
-    private val busesQueue: TreeSet<BusTrack> =
-        TreeSet<BusTrack>(compareBy { it.triggerAtElapsedSinceBoot })
+    private val busesQueue: TreeSet<TimestampTrack> =
+        TreeSet<TimestampTrack>(compareBy { it.triggerAtElapsedSinceBoot })
 
-    private val eventChannel = Channel<Unit>(Channel.CONFLATED) // Notificación única
+    private val _events = Channel<UpdateTimestamp>(capacity = Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
+
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
     private var trackingJob: Job? = null
 
     private val mutex: Mutex = Mutex()
 
-    fun track(param: BusParam) {
-        val track = BusTrack(
-            param.id,
-            param.name,
-            param.timestamp,
-            getTriggerAtElapsedSinceBoot(param.timestamp)
-        )
-        busesQueue.add(track)
-
-        tracking()
+    suspend fun subscribe(param: TimestampBusLineParam) {
+        subscribe(listOf(param))
     }
 
-    fun unTrackBus(busId: String) {
-        scope.launch {
-            mutex.withLock {
-                val iterator = busesQueue.iterator()
-                while (iterator.hasNext()) {
-                    if (iterator.next().id == busId) {
-                        iterator.remove()
-                    }
+    suspend fun subscribe(params: List<TimestampBusLineParam>) {
+        mutex.withLock {
+            params.forEach { param ->
+                val track = TimestampTrack(
+                    busLineId = param.busLineId,
+                    timestampId = param.timestampId,
+                    timestamp = param.timestamp,
+                    triggerAtElapsedSinceBoot = getTriggerAtElapsedSinceBoot(param.timestamp)
+                )
+                busesQueue.add(track)
+            }
+        }
+    }
+
+    fun startTracking() {
+        if (trackingJob?.isActive == true) return
+
+        trackingJob = scope.launch {
+            while (true) {
+                val currentBus = mutex.withLock {
+                    if (busesQueue.isEmpty()) return@launch
+                    busesQueue.first()
+                }
+
+                val timeLeftToTrigger = max(
+                    ZERO_MS,
+                    currentBus.triggerAtElapsedSinceBoot - SystemClock.elapsedRealtime()
+                )
+
+                delay(timeLeftToTrigger)
+
+                val elapsedTime = System.currentTimeMillis() - currentBus.timestamp
+
+                _events.trySend(
+                    UpdateTimestamp(
+                        busLineId = currentBus.busLineId,
+                        timestampId = currentBus.timestampId,
+                        timestamp = currentBus.timestamp,
+                        elapsedTime = elapsedTime
+                    )
+                )
+
+                mutex.withLock {
+                    busesQueue.remove(currentBus)
+
+                    val newTrack = currentBus.copy(
+                        triggerAtElapsedSinceBoot = getTriggerAtElapsedSinceBoot(currentBus.timestamp)
+                    )
+                    busesQueue.add(newTrack)
                 }
             }
         }
     }
 
-    private fun tracking() {
-        if (trackingJob?.isActive == true) return
-
-        trackingJob = scope.launch {
-            while (busesQueue.isNotEmpty()) {
-                // obtenemos el bus mas proximo a recibir el update
-                val currentBus = busesQueue.first()
-
-                // calculamos cuanto tiempo falta para su ejecucion
-                // de evento, el cual no se puede ser menor a cero
-                val timeLeftToTrigger = max(
-                    ZERO_MS,
-                    currentBus.triggerAtElapsedSinceBoot.minus(SystemClock.elapsedRealtime())
-                )
-
-                // hacemos el delay
-                delay(timeLeftToTrigger)
-
-                // ejecutamos el evento
-                // aqui debe emitirse el evento
-                val elapsedTimeBusTimestamp = System.currentTimeMillis() - currentBus.timestamp
-
-
-                Log.e(
-                    "BRIANA",
-                    "Bus: ${currentBus.name} - " + elapsedTimeBusTimestamp
-                )
-
-                // eliminamos el bus actual
-                busesQueue.remove(currentBus)
-
-                // programamos su proximo evento
-                val newTrack = currentBus.copy(
-                    triggerAtElapsedSinceBoot = getTriggerAtElapsedSinceBoot(currentBus.timestamp)
-                )
-                busesQueue.add(newTrack)
-            }
-        }
-    }
-
-    private fun getTriggerAtElapsedSinceBoot(timestampBus: Long): Long {
+    private suspend fun getTriggerAtElapsedSinceBoot(timestampBus: Long): Long {
         // tiempo transcurrido desde que se encendio el dispositivo
-        val currentElapsedSinceBoot =
-            SystemClock.elapsedRealtime() // 3 horas o 15 segundos o 47 minutos
+        val currentElapsedSinceBoot = SystemClock.elapsedRealtime() // 3h, 15seg, 47min
 
         // hora que da actualmente el sistema
         val currentSystemTimestamp = System.currentTimeMillis() // 12:30:23.540
 
         // tiempo transcurrido desde que se grabo el snapshot elapsed boot y el system timestamp
         val elapsedTimeSinceBootSnapshot =
-            currentElapsedSinceBoot.minus(timestampSnapshot.elapsedSinceBoot) // 1 hora o 30 segundos o 10 minutos o etc
+            currentElapsedSinceBoot.minus(timestampSnapshotManager.getElapsedSinceBoot()) // 1 hora o 30 segundos o 10 minutos o etc
 
         // hora que dio en el sistema cuando se tomo el snapshot
-        val systemTimestampSnapshot = timestampSnapshot.systemTimestamp // 10:20:45.100
+        val systemTimestampSnapshot =
+            timestampSnapshotManager.getSystemTimestampBoot() // 10:20:45.100
 
         // hora que deberia dar el sistema actualmente
         val correctCurrentTimestamp =
@@ -158,7 +164,7 @@ class BusTimestampTracker(
         return when {
             // si el tiempo desde que paso el bus es menor a una hora entonces el update es cada
             // segundo por lo que se obtiene las milesimas de cuanto falta para el siguiente segundo
-            elapsedTimeFromBusTimestamp < ONE_HOUR_MS -> {
+            elapsedTimeFromBusTimestamp < TEN_MINUTE_IN_MS -> {
                 getMillisecondsNextTick(currentSystemTime, timestampBus)
             }
             // si el tiempo desde que paso el bus es mayor o igual a un minuto entonces el update es cada
@@ -232,39 +238,8 @@ class BusTimestampTracker(
 
 }
 
-data class TimestampSnapshot(
-    val elapsedSinceBoot: Long, // Tiempo transcurrido desde el arranque en el momento de la captura
-    val systemTimestamp: Long   // Marca de tiempo absoluta en el momento de la captura
-)
-
 const val ZERO_MS = 0L
 const val FIVE_SECONDS_MS = 5000L
-const val ONE_HOUR_MS = 3600000L
 const val SECONDS_59 = 59000L
 const val ONE_SECOND_MS = 1000L
-
-val currentTime: Calendar = Calendar.getInstance().apply {
-    set(Calendar.HOUR, 11)
-    set(Calendar.MINUTE, 10)
-    set(Calendar.SECOND, 17)
-    set(Calendar.MILLISECOND, 200)
-}
-
-val busTimestamp: Calendar = Calendar.getInstance().apply {
-    set(Calendar.HOUR, 9)
-    set(Calendar.MINUTE, 10)
-    set(Calendar.SECOND, 20)
-    set(Calendar.MILLISECOND, 0)
-}
-
-fun main() {
-    val busTimestampTracker = BusTimestampTracker(TimestampSnapshot(0L, 0L))
-
-    val formatter = SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS", Locale.getDefault())
-    println("bus: ${formatter.format(busTimestamp.timeInMillis)}")
-    println("current: ${formatter.format(currentTime.timeInMillis)}")
-
-    val timeInMs =
-        busTimestampTracker.getMsToNextTick(currentTime.timeInMillis, busTimestamp.timeInMillis)
-    println("timeInMs: $timeInMs")
-}
+const val TEN_MINUTE_IN_MS: Long = 600_000L
