@@ -14,5 +14,4 @@ data class DateroRootState(
 
 sealed interface DateroRootDialogState {
     object None : DateroRootDialogState
-    object InvalidTimeDialog : DateroRootDialogState
 }
