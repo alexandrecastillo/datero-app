@@ -1,35 +1,40 @@
 package labs.alexandre.datero
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.Composable
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import labs.alexandre.datero.ui.dashboard.DashboardScreen
-import labs.alexandre.datero.ui.theme.DateroTheme
+import labs.alexandre.datero.presentation.root.DateroRootScreen
+import labs.alexandre.datero.presentation.navigation.DateroNavigation
+import labs.alexandre.datero.presentation.theme.DateroTheme
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         enableEdgeToEdge()
-
         setContent {
-            DateroTheme {
-                DashboardScreen()
-                /*
-                DashboardScreenSkeleton(
-                    uiState = DashboardUiState.Idle,
-                    busLines = SnapshotStateMap<String, BusLineUiModel>(),
-                    onBusLineClick = {},
-                    onMarkBusLineClick = {},
-                    onBusTimestampClick = {},
-                    onAddBusLineClick = {}
-                )
-                 */
-            }
+            AppDatero()
         }
     }
 
+}
+
+@Composable
+fun AppDatero() {
+    DateroTheme {
+        DateroRootScreen {
+            DateroNavigation()
+        }
+    }
 }
