@@ -1,8 +1,9 @@
 package labs.alexandre.datero.domain.model
 
 data class BusLine(
-    val id: Long,
+    val id: Long? = null,
     val name: String,
     val colors: List<String>,
-    val timestamps: List<Timestamp>
+    val position: Int = 0,
+    val marks: List<BusMark> = emptyList()
 )
