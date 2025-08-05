@@ -1,17 +1,12 @@
 package labs.alexandre.datero.presentation.root.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import labs.alexandre.datero.presentation.root.effect.DateroRootEffect
-import labs.alexandre.datero.presentation.root.intent.DateroRootIntent
-import labs.alexandre.datero.presentation.root.state.DateroRootDialogState
 import labs.alexandre.datero.presentation.root.state.DateroRootState
 import javax.inject.Inject
 
