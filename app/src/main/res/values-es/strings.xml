@@ -1,0 +1,81 @@
+<resources>
+
+    <!-- General -->
+    <string name="app_name">Datero</string>
+
+    <!-- Splash -->
+    <string name="splash_credits">Alexandre Labs</string>
+    <string name="splash_content_description_image">Imagen Datero App</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Tablero</string>
+    <string name="dashboard_content_description_button_icon_mark">Ícono marcar</string>
+    <string name="dashboard_content_description_button_icon_settings">Ícono ajustes</string>
+    <string name="dashboard_button_text_mark">Marcar</string>
+    <string name="dashboard_message_success_on_mark">Tiempo marcado correctamente</string>
+    <string name="dashboard_text_empty_marks">Aún no has marcado buses hoy</string>
+    <string name="dashboard_elapsed_minutes">min</string>
+    <string name="dashboard_elapsed_plus_value">+%1$s</string>
+    <plurals name="dashboard_elapsed_hours">
+        <item quantity="one">hora</item>
+        <item quantity="many">horas</item>
+        <item quantity="other">horas</item>
+    </plurals>
+    <string name="dashboard_empty_bus_icon">Imagen de un bus</string>
+    <string name="dashboard_empty_title">El tablero esta vacío</string>
+    <string name="dashboard_empty_description">Agrega tu primera línea de bus para comenzar a controlar sus tiempos</string>
+    <string name="dashboard_empty_text_button">Agregar línea de bus</string>
+    <string name="dashboard_empty_content_description_icon_button">Ícono agregar</string>
+    <string name="dashboard_dialog_mark_timestamp_button_title_question">¿Qué tan lleno está el bus?</string>
+    <string name="dashboard_dialog_mark_timestamp_button_text_confirm_mark">Marcar</string>
+    <string name="dashboard_dialog_mark_timestamp_content_description_icon_bus_occupancy">Ícono cantidad pasajeros</string>
+    <string name="dashboard_dialog_mark_timestamp_low_occupancy">Poco o nada</string>
+    <string name="dashboard_dialog_mark_timestamp_medium_occupancy">Todos sentados</string>
+    <string name="dashboard_dialog_mark_timestamp_high_occupancy">Totalmente ocupado</string>
+
+    <!-- Bus Lines -->
+    <string name="bus_lines_title">Configurar líneas de bus</string>
+    <string name="bus_lines_content_description_icon_close">Ícono cerrar</string>
+    <string name="bus_lines_content_description_icon_add_bus_line">Ícono agregar línea de bus</string>
+    <string name="bus_lines_content_description_edit_item_icon_remove">Ícono eliminar</string>
+    <string name="bus_lines_content_description_edit_item_icon_drag">Ícono arrastrar</string>
+    <string name="bus_lines_empty_content_description_image">Imagén de un bus</string>
+    <string name="bus_lines_empty_title">Agrega tu primera línea de bus</string>
+    <string name="bus_lines_empty_subtitle">Organiza de manera sencilla tus líneas de bus</string>
+    <!-- Bus Lines Dialog Delete -->
+    <string name="bus_lines_detail_dialog_delete_title">Eliminar línea de bus</string>
+    <string name="bus_lines_detail_dialog_delete_description">¿Estás seguro de que deseas eliminar la línea de bus "%s"? Esta acción no se puede deshacer.</string>
+    <string name="bus_lines_detail_dialog_delete_confirm_button">Eliminar</string>
+    <string name="bus_lines_detail_dialog_delete_cancel_button">Cancelar</string>
+
+    <!-- Bus Line Detail -->
+    <string name="bus_line_detail_title_create">Crear línea de bus</string>
+    <string name="bus_line_detail_title_edit">Editar línea de bus</string>
+    <string name="bus_line_detail_message_on_save">Línea guardada correctamente</string>
+    <string name="bus_line_detail_content_description_icon_close">Ícono cerrar</string>
+    <string name="bus_line_detail_text_button_save">Guardar</string>
+    <!-- Bus Line Detail Name -->
+    <string name="bus_line_detail_field_name_label">Nombre</string>
+    <string name="bus_line_detail_field_name_placeholder">Ej: Chosicano</string>
+    <string name="bus_line_detail_field_name_supporting_text">Ingresa el nombre de la línea</string>
+    <!-- Bus Line Detail Strips -->
+    <string name="bus_line_detail_strip_section_title">Franjas</string>
+    <string name="bus_line_detail_field_strips_supporting_text">Agrega al menos una franja</string>
+    <string name="bus_line_detail_strip_add_button">Agregar franja</string>
+    <string name="bus_line_detail_strip_content_description_icon_add_strip">Ícono agregar franja</string>
+    <string name="bus_line_detail_strip_content_description_icon_duplicate_strip">Ícono duplicar franja</string>
+    <string name="bus_line_detail_strip_content_description_icon_delete_strip">Ícono eliminar franja</string>
+    <string name="bus_line_detail_strip_preview_flag">Previsualización</string>
+
+    <!-- Bus Line Detail Dialog Discard Changes -->
+    <string name="bus_line_detail_dialog_discard_changes_title">¿Descartar cambios?</string>
+    <string name="bus_line_detail_dialog_discard_changes_description">Se perderán los cambios no guardados.</string>
+    <string name="bus_line_detail_dialog_discard_changes_confirm_button">Descartar</string>
+    <string name="bus_line_detail_dialog_discard_changes_cancel_button">Cancelar</string>
+    <!-- Bus Line Detail Dialog Pick Color -->
+    <string name="bus_line_detail_dialog_pick_color_title_new_strip">Nueva franja</string>
+    <string name="bus_line_detail_dialog_pick_color_title_edit_strip">Editar franja</string>
+    <string name="bus_line_detail_dialog_pick_color_chosen_color">Color elegido</string>
+    <string name="bus_line_detail_dialog_pick_color_button_save">Guardar color</string>
+
+</resources>
