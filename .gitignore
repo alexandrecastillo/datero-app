@@ -29,5 +29,8 @@ render.experimental.xml
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
+# Huawei Services (e.g. APIs or Crash)
+agconnect-services.json
+
 # Android Profiling
 *.hprof
