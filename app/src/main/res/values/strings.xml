@@ -1,4 +1,85 @@
 <resources>
-    <string name="app_name">datero-app</string>
-    <string name="dashboard_title">Tablero</string>
+
+    <!-- General -->
+    <string name="app_name">Datero</string>
+
+    <!-- Splash -->
+    <string name="splash_credits">Alexandre Labs</string>
+    <string name="splash_content_description_image">Datero App Image</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="dashboard_content_description_button_icon_mark">Mark icon</string>
+    <string name="dashboard_content_description_button_icon_settings">Settings icon</string>
+    <string name="dashboard_button_text_mark">Mark</string>
+    <string name="dashboard_message_success_on_mark">Timestamp marked successfully</string>
+    <string name="dashboard_text_empty_marks">You haven\'t marked any buses yet today</string>
+    <string name="dashboard_elapsed_minutes">min</string>
+    <string name="dashboard_elapsed_plus_value">+%1$s</string>
+    <plurals name="dashboard_elapsed_hours">
+        <item quantity="one">hour</item>
+        <item quantity="many">hours</item>
+        <item quantity="other">hours</item>
+    </plurals>
+    <string name="dashboard_empty_bus_icon">Image of a bus</string>
+    <string name="dashboard_empty_title">The dashboard is empty</string>
+    <string name="dashboard_empty_description">Add your first bus line to start tracking times</string>
+    <string name="dashboard_empty_text_button">Add bus line</string>
+    <string name="dashboard_empty_content_description_icon_button">Add icon</string>
+    <string name="dashboard_dialog_mark_timestamp_button_title_question">How full is the bus?</string>
+    <string name="dashboard_dialog_mark_timestamp_button_text_confirm_mark">Mark</string>
+    <string name="dashboard_dialog_mark_timestamp_content_description_icon_bus_occupancy">Passenger count icon</string>
+    <string name="dashboard_dialog_mark_timestamp_low_occupancy">Few or none</string>
+    <string name="dashboard_dialog_mark_timestamp_medium_occupancy">All seated</string>
+    <string name="dashboard_dialog_mark_timestamp_high_occupancy">Fully occupied</string>
+
+    <!-- Bus Lines -->
+    <string name="bus_lines_title">Manage bus lines</string>
+    <string name="bus_lines_content_description_icon_close">Close icon</string>
+    <string name="bus_lines_content_description_icon_add_bus_line">Add bus line icon</string>
+    <string name="bus_lines_content_description_edit_item_icon_remove">Delete icon</string>
+    <string name="bus_lines_content_description_edit_item_icon_drag">Drag icon</string>
+    <string name="bus_lines_empty_content_description_image">Bus image</string>
+    <string name="bus_lines_empty_title">Add your first bus line</string>
+    <string name="bus_lines_empty_subtitle">Easily organize your bus lines</string>
+
+    <!-- Bus Lines Dialog Delete -->
+    <string name="bus_lines_detail_dialog_delete_title">Delete bus line</string>
+    <string name="bus_lines_detail_dialog_delete_description">Are you sure you want to delete the bus line "%s"? This action cannot be undone.</string>
+    <string name="bus_lines_detail_dialog_delete_confirm_button">Delete</string>
+    <string name="bus_lines_detail_dialog_delete_cancel_button">Cancel</string>
+
+    <!-- Bus Line Detail -->
+    <string name="bus_line_detail_title_create">Create bus line</string>
+    <string name="bus_line_detail_title_edit">Edit bus line</string>
+    <string name="bus_line_detail_message_on_save">Bus line saved successfully</string>
+    <string name="bus_line_detail_content_description_icon_close">Close icon</string>
+    <string name="bus_line_detail_text_button_save">Save</string>
+
+    <!-- Bus Line Detail Name -->
+    <string name="bus_line_detail_field_name_label">Name</string>
+    <string name="bus_line_detail_field_name_placeholder">E.g. Chosicano</string>
+    <string name="bus_line_detail_field_name_supporting_text">Enter the name of the bus line</string>
+
+    <!-- Bus Line Detail Strips -->
+    <string name="bus_line_detail_strip_section_title">Strips</string>
+    <string name="bus_line_detail_field_strips_supporting_text">Add at least one strip</string>
+    <string name="bus_line_detail_strip_add_button">Add strip</string>
+    <string name="bus_line_detail_strip_content_description_icon_add_strip">Add strip icon</string>
+    <string name="bus_line_detail_strip_content_description_icon_duplicate_strip">Duplicate strip icon</string>
+    <string name="bus_line_detail_strip_content_description_icon_delete_strip">Delete strip icon</string>
+    <string name="bus_line_detail_strip_preview_flag">Preview</string>
+
+    <!-- Bus Line Detail Dialog Discard Changes -->
+    <string name="bus_line_detail_dialog_discard_changes_title">Discard changes?</string>
+    <string name="bus_line_detail_dialog_discard_changes_description">Unsaved changes will be lost.</string>
+    <string name="bus_line_detail_dialog_discard_changes_confirm_button">Discard</string>
+    <string name="bus_line_detail_dialog_discard_changes_cancel_button">Cancel</string>
+
+    <!-- Bus Line Detail Dialog Pick Color -->
+    <string name="bus_line_detail_dialog_pick_color_title_new_strip">New strip</string>
+    <string name="bus_line_detail_dialog_pick_color_title_edit_strip">Edit strip</string>
+    <string name="bus_line_detail_dialog_pick_color_chosen_color">Chosen color</string>
+    <string name="bus_line_detail_dialog_pick_color_button_save">Save color</string>
+
 </resources>
