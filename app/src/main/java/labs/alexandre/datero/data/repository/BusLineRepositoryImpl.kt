@@ -1,712 +1,102 @@
 package labs.alexandre.datero.data.repository
 
-import android.icu.util.Calendar
-import kotlinx.coroutines.delay
+import androidx.room.withTransaction
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import labs.alexandre.datero.data.event.BusLineDataEvent
-import labs.alexandre.datero.domain.enums.BusState
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.withContext
+import labs.alexandre.datero.core.time.TimeChangeDetector
+import labs.alexandre.datero.core.time.TimeChangeEvent
+import labs.alexandre.datero.data.database.DateroDatabase
+import labs.alexandre.datero.data.database.dao.BusLineDao
+import labs.alexandre.datero.data.database.dao.BusMarkDao
+import labs.alexandre.datero.data.mapper.toData
+import labs.alexandre.datero.data.mapper.toDomain
 import labs.alexandre.datero.domain.model.BusLine
-import labs.alexandre.datero.domain.model.Timestamp
-import kotlin.random.Random
+import labs.alexandre.datero.domain.model.BusMark
+import labs.alexandre.datero.domain.repository.BusLineRepository
+import javax.inject.Inject
 
-class BusLineRepositoryImpl : BusLineRepository {
+class BusLineRepositoryImpl @Inject constructor(
+    private val busLineDao: BusLineDao,
+    private val busMarkDao: BusMarkDao,
+    private val database: DateroDatabase,
+    private val timeChangeDetector: TimeChangeDetector
+) : BusLineRepository {
 
-    override suspend fun getBusLines(): List<BusLine> {
-        return listOf(
-            BusLine(
-                id = 1,
-                name = "La Chama",
-                colors = listOf(
-                    "#FFD73939",
-                    "#FF196320",
-                    "#FF20882B",
-                    "#FFF8F8F8",
-                    "#FFD73939"
-                ),
-                timestamps = listOf(
-                    Timestamp(
-                        id = 1,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -30)
-                            set(Calendar.MILLISECOND, -100)
-                        }.timeInMillis,
-                        state = BusState.VERY_LOW
-                    ),
-                    Timestamp(
-                        id = 2,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -20)
-                            set(Calendar.MILLISECOND, -200)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 3,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -10)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 4,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -32)
-                            set(Calendar.MILLISECOND, -300)
-                            set(Calendar.MINUTE, -10)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 5,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -25)
-                            set(Calendar.MILLISECOND, -280)
-                        }.timeInMillis,
-                        state = BusState.FULL
-                    ),
-                    Timestamp(
-                        id = 6,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -37)
-                            set(Calendar.MINUTE, -5)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 7,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, -330)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                    Timestamp(
-                        id = 8,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, -450)
-                            set(Calendar.MINUTE, -8)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                )
-            ),
-
-            BusLine(
-                id = 2,
-                name = "La E",
-                colors = listOf(
-                    "#FFFFFFFF",
-                    "#FFFFB344"
-                ),
-                timestamps = listOf(
-                    Timestamp(
-                        id = 1,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -30)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.VERY_LOW
-                    ),
-                    Timestamp(
-                        id = 2,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -20)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 3,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -10)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 4,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -32)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -10)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 5,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -25)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.FULL
-                    ),
-                    Timestamp(
-                        id = 6,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.SECOND, -37)
-                            set(Calendar.MINUTE, -5)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 7,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                    Timestamp(
-                        id = 8,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -8)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                )
-            ),
-            BusLine(
-                id = 3,
-                name = "La 73",
-                colors = listOf(
-                    "#78C63A"
-                ),
-                timestamps = listOf(
-                    Timestamp(
-                        id = 1,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -30)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.VERY_LOW
-                    ),
-                    Timestamp(
-                        id = 2,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -20)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 3,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -10)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 4,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -32)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -10)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 5,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -25)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.FULL
-                    ),
-                    Timestamp(
-                        id = 6,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -37)
-                            set(Calendar.MINUTE, -5)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 7,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                    Timestamp(
-                        id = 8,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -8)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                )
-            ),
-            BusLine(
-                id = 4,
-                name = "El Chino",
-                colors = listOf(
-                    "#01B4EC"
-                ),
-                timestamps = listOf(
-                    Timestamp(
-                        id = 1,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -30)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.VERY_LOW
-                    ),
-                    Timestamp(
-                        id = 2,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -20)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 3,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -10)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 4,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -32)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -10)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 5,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -25)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.FULL
-                    ),
-                    Timestamp(
-                        id = 6,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -37)
-                            set(Calendar.MINUTE, -5)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 7,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                    Timestamp(
-                        id = 8,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -8)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                )
-            ),
-            BusLine(
-                id = 5,
-                name = "La Chama",
-                colors = listOf(
-                    "#FFD73939",
-                    "#FF196320",
-                    "#FF20882B",
-                    "#FFF8F8F8",
-                    "#FFD73939"
-                ),
-                timestamps = listOf(
-                    Timestamp(
-                        id = 1,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -30)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.VERY_LOW
-                    ),
-                    Timestamp(
-                        id = 2,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -20)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 3,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -10)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 4,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -32)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -10)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 5,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -25)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.FULL
-                    ),
-                    Timestamp(
-                        id = 6,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -37)
-                            set(Calendar.MINUTE, -5)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 7,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                    Timestamp(
-                        id = 8,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -8)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                )
-            ),
-            BusLine(
-                id = 6,
-                name = "La E",
-                colors = listOf(
-                    "#FFFFFFFF",
-                    "#FFFFB344"
-                ),
-                timestamps = listOf(
-                    Timestamp(
-                        id = 1,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -30)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.VERY_LOW
-                    ),
-                    Timestamp(
-                        id = 2,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -20)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 3,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -10)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 4,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -32)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -10)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 5,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -25)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.FULL
-                    ),
-                    Timestamp(
-                        id = 6,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -37)
-                            set(Calendar.MINUTE, -5)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 7,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                    Timestamp(
-                        id = 8,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -8)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                )
-            ),
-            BusLine(
-                id = 7,
-                name = "La 73",
-                colors = listOf(
-                    "#78C63A"
-                ),
-                timestamps = listOf(
-                    Timestamp(
-                        id = 1,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -30)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.VERY_LOW
-                    ),
-                    Timestamp(
-                        id = 2,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -20)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 3,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -10)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 4,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -32)
-                            set(Calendar.MILLISECOND, -300)
-                            set(Calendar.MINUTE, -10)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 5,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -25)
-                            set(Calendar.MILLISECOND, -280)
-                        }.timeInMillis,
-                        state = BusState.FULL
-                    ),
-                    Timestamp(
-                        id = 6,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -37)
-                            set(Calendar.MINUTE, -5)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 7,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, -330)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                    Timestamp(
-                        id = 8,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, -450)
-                            set(Calendar.MINUTE, -8)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                )
-            ),
-            BusLine(
-                id = 8,
-                name = "El Chino",
-                colors = listOf(
-                    "#01B4EC"
-                ),
-                timestamps = listOf(
-                    Timestamp(
-                        id = 1,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -30)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.VERY_LOW
-                    ),
-                    Timestamp(
-                        id = 2,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -20)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 3,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -10)
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 4,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -32)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -10)
-                        }.timeInMillis,
-                        state = BusState.OVER_FULL
-                    ),
-                    Timestamp(
-                        id = 5,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -25)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.FULL
-                    ),
-                    Timestamp(
-                        id = 6,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -37)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.LOW
-                    ),
-                    Timestamp(
-                        id = 7,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                    Timestamp(
-                        id = 8,
-                        busLineId = 1,
-                        timestamp = Calendar.getInstance().apply {
-                            set(Calendar.SECOND, -45)
-                            set(Calendar.MILLISECOND, Random.nextInt(0, 999))
-                            set(Calendar.MINUTE, -8)
-                        }.timeInMillis,
-                        state = BusState.NORMAL
-                    ),
-                )
-            )
-        )
+    override fun observeBusLines(): Flow<List<BusLine>> {
+        return busLineDao.observeBusLines().map { it.map { it.toDomain() } }
     }
 
-    override fun getBusLinesEvents(): Flow<BusLineDataEvent> {
-        return flow {
-            delay(5000)
-            emit(
-                BusLineDataEvent.BusLineAdded(
-                    BusLine(
-                        id = 15,
-                        name = "El Chosicano",
-                        colors = listOf("#FFFFFF", "#2DAF3A", "#196320"),
-                        timestamps = listOf()
-                    )
-                )
-            )
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun observeBusLinesWithBusMarks(): Flow<List<BusLine>> {
+        return timeChangeDetector.events
+            .onStart {
+                emit(TimeChangeEvent.TIME_TICK)
+            }
+            .flatMapLatest {
+                busLineDao.observeBusLines()
+            }
+            .flatMapLatest { busLines ->
+                if (busLines.isEmpty()) {
+                    return@flatMapLatest flowOf(emptyList())
+                }
+
+                val busLinesWithMarks = busLines.map { busLine ->
+                    busMarkDao.observeLast9BusMarks(busLine.id)
+                        .map { timestamps ->
+                            busLine.toDomain(timestamps)
+                        }
+                }
+
+                combine(busLinesWithMarks) { it.toList() }
+            }.distinctUntilChanged()
+
+    }
+
+    override suspend fun upsertBusLine(busLine: BusLine): Long = withContext(Dispatchers.IO) {
+        val busLineWithPosition = when (busLine.id == null) {
+            true -> {
+                val nextPosition = (busLineDao.getMaxPosition() ?: 0) + 1
+                busLine.copy(position = nextPosition)
+            }
+
+            false -> busLine
+        }
+
+        busLineDao.upsert(busLineWithPosition.toData())
+    }
+
+
+    override suspend fun addBusMark(busMark: BusMark): Long = withContext(Dispatchers.IO) {
+        busMarkDao.insert(busMark.toData())
+    }
+
+    override suspend fun deleteBusLine(busLineId: Long): Boolean = withContext(Dispatchers.IO) {
+        return@withContext database.withTransaction {
+            busLineDao.deleteById(busLineId)
+            busMarkDao.deleteBusMarksByBusLineId(busLineId)
+            true
         }
     }
 
-    override suspend fun addBusLine(busLine: BusLine) {
-
+    override suspend fun getBusLine(busLineId: Long): BusLine? = withContext(Dispatchers.IO) {
+        busLineDao.getById(busLineId)?.toDomain()
     }
 
-    override suspend fun addBusTimestamp(timestamp: Timestamp) {
-        TODO("Not yet implemented")
+    override suspend fun reorder(busLines: List<BusLine>): Boolean = withContext(Dispatchers.IO) {
+        val entities = busLines.map { busLine -> busLine.toData() }
+
+        return@withContext database.withTransaction {
+            busLineDao.updateAll(entities)
+            true
+        }
     }
 
 }
