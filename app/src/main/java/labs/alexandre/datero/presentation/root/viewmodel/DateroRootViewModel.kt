@@ -24,37 +24,4 @@ class DateroRootViewModel @Inject constructor(): ViewModel() {
     private val _effect = MutableSharedFlow<DateroRootEffect>()
     val effect: SharedFlow<DateroRootEffect> = _effect
 
-    init {
-    }
-
-    fun onIntent(intent: DateroRootIntent) {
-        when (intent) {
-            DateroRootIntent.RecalculateTimes -> {
-                recalculateTime()
-            }
-
-            DateroRootIntent.DismissRecalculateTimesDialog -> {
-                onDismissDialog()
-            }
-        }
-    }
-
-    private fun validTime() {
-        _uiState.update { uiState ->
-            uiState.copy()
-        }
-    }
-
-    private fun onDismissDialog() {
-        _uiState.update { uiState ->
-            uiState.copy(dialogState = DateroRootDialogState.None)
-        }
-    }
-
-    private fun recalculateTime() {
-        viewModelScope.launch {
-
-        }
-    }
-
 }
