@@ -1,6 +1,5 @@
 package labs.alexandre.datero.presentation.features.dashboard.components.busmark
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
