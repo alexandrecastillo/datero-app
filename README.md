@@ -12,7 +12,7 @@
 
 ## 🚌 ¿Qué es Datero?
 
-**Datero** es una app diseñada para ayudarte a monitorear y registrar el paso de buses de manera ágil, precisa y sin complicaciones.  
+**Datero** es una app diseñada para ayudarte a monitorear y registrar el tiempo de los buses de manera ágil, precisa y sin complicaciones.  
 Olvídate del papel y del reloj: **convierte tu celular en tu mejor herramienta de trabajo.**
 
 ---
@@ -20,16 +20,16 @@ Olvídate del papel y del reloj: **convierte tu celular en tu mejor herramienta 
 ## 🧩 Funciones clave
 
 ### 🕒 Monitoreo en tiempo real  
-Registra con un solo toque cuánto tiempo ha pasado desde el último bus y mantén el control del flujo fácilmente.
+Controla cuánto tiempo ha pasado desde el último bus en tiempo real.
 
-### ⚡ Marcado ultra rápido  
-Rápido y sin distracciones. Con un toque registras la llegada del bus. Simple y eficaz.
+### ⚡ Marcado ultra rápido 
+Rápido y sin distracciones. Olvidate de sumar y restar tiempos. Con un toque registras la llegada del bus. Simple y eficaz.
 
 ### 🎨 Visualización clara y personalizable  
 Asigna nombre y franjas de color a cada línea. Identifícalas al instante con solo mirar.
 
 ### 🧠 Organización inteligente  
-Agrupa, ordena y clasifica los buses como prefieras. Todo adaptado a tu forma de trabajar.
+Ordena los buses como prefieras. Todo adaptado a tu forma de trabajar.
 
 ---
 
