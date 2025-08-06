@@ -1,6 +1,5 @@
 package labs.alexandre.datero.domain.usecase
 
-import android.util.Log
 import labs.alexandre.datero.domain.constants.BusinessRules
 import labs.alexandre.datero.domain.constants.Times
 import labs.alexandre.datero.domain.model.Cycle
@@ -15,19 +14,10 @@ class CalculateCycleUseCase @Inject constructor(
 
     fun invoke(busMarkTimestamp: Long): Cycle {
         val elapsedSinceMark = getElapsedTimeFromBusMark(busMarkTimestamp)
-        Log.e("BRIANA", "getElapsedTimeFromBusMark: $elapsedSinceMark")
-
         val cycleDuration = getCycleDuration(elapsedSinceMark)
-        Log.e("BRIANA", "cycleDuration: $cycleDuration")
-
         val elapsedInCycle = getElapsedInCycle(elapsedSinceMark, cycleDuration)
-        Log.e("BRIANA", "elapsedInCycle: $elapsedInCycle")
-
         val remainingInCycle = (cycleDuration - elapsedInCycle)
-        Log.e("BRIANA", "remainingInCycle: $remainingInCycle")
-
         val scpElapsedRealtime = systemClockProvider.elapsedRealtime()
-        Log.e("BRIANA", "scpElapsedRealtime: $scpElapsedRealtime")
 
         return Cycle(
             startSystemClock = scpElapsedRealtime - elapsedInCycle,
