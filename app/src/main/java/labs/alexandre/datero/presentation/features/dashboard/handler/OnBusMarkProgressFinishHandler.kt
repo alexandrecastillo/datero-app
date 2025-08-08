@@ -50,7 +50,7 @@ class OnBusMarkProgressFinishHandler @Inject constructor(
         }
 
         val elapsedTime = calculateElapsedTimeUseCase.invoke(
-            Param.Current(busMark.timestamp)
+            Param.Ongoing(busMark.timestamp)
         )
         val cycle = calculateCycleUseCase.invoke(busMark.timestamp)
 

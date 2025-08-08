@@ -24,22 +24,22 @@ class ObserveBusLineWithTimestampsUseCase @Inject constructor(
     fun classifyMarks(
         marks: List<BusMark>,
     ): List<BusMark> {
-        return marks.mapIndexed { index, current ->
-            val preview = marks.getOrNull(index - 1)
+        return marks.mapIndexed { index, reference ->
+            val nextMark = marks.getOrNull(index - 1)
 
-            when (preview) {
+            when (nextMark) {
                 null -> {
                     val elapsedTime = calculateElapsedTimeUseCase.invoke(
-                        Param.Current(current.timestamp)
+                        Param.Ongoing(reference.timestamp)
                     )
 
-                    val cycle = calculateCycleUseCase.invoke(current.timestamp)
+                    val cycle = calculateCycleUseCase.invoke(reference.timestamp)
 
                     BusMark.Current(
-                        id = current.id,
-                        busLineId = current.busLineId,
-                        timestamp = current.timestamp,
-                        occupancy = current.occupancy,
+                        id = reference.id,
+                        busLineId = reference.busLineId,
+                        timestamp = reference.timestamp,
+                        occupancy = reference.occupancy,
                         elapsedTime = elapsedTime,
                         cycle = cycle
                     )
@@ -47,14 +47,14 @@ class ObserveBusLineWithTimestampsUseCase @Inject constructor(
 
                 else -> {
                     val elapsedTime = calculateElapsedTimeUseCase.invoke(
-                        Param.Historical(preview, current)
+                        Param.BetweenMarks(nextMark.timestamp, reference.timestamp)
                     )
 
                     BusMark.Historical(
-                        id = current.id,
-                        busLineId = current.busLineId,
-                        timestamp = current.timestamp,
-                        occupancy = current.occupancy,
+                        id = reference.id,
+                        busLineId = reference.busLineId,
+                        timestamp = reference.timestamp,
+                        occupancy = reference.occupancy,
                         elapsedTime = elapsedTime
                     )
                 }

@@ -1,14 +1,12 @@
 package labs.alexandre.datero.presentation.features.busLineDetail.components.dialog
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +30,7 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import labs.alexandre.datero.R
 import labs.alexandre.datero.presentation.features.busLineDetail.state.DialogColorPickerUiState
 import labs.alexandre.datero.presentation.theme.DateroTheme
+import labs.alexandre.datero.presentation.ui.component.PrimaryButton
 import labs.alexandre.datero.presentation.ui.util.Constant
 import labs.alexandre.datero.presentation.ui.util.toColorIntOrNull
 
@@ -102,33 +101,13 @@ fun BottomSheetColorPicker(
             controller = controller
         )
         Spacer(modifier = Modifier.height(32.dp))
-        ButtonSaveColor(
-            modifier = Modifier.padding(horizontal = 24.dp),
+        PrimaryButton(
+            text = stringResource(R.string.bus_line_detail_dialog_pick_color_button_save),
+            modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth(),
             enabled = hexCode.value.isNotBlank(),
             onClick = { onClickSave(colorPickerUiState.currentIdColor, hexCode.value) }
         )
         Spacer(modifier = Modifier.height(32.dp))
-    }
-}
-
-@Composable
-fun ButtonSaveColor(
-    modifier: Modifier = Modifier,
-    enabled: Boolean = false,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        enabled = enabled,
-        shape = RoundedCornerShape(8.dp),
-        contentPadding = PaddingValues(vertical = 16.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier),
-    ) {
-        Text(
-            text = stringResource(R.string.bus_line_detail_dialog_pick_color_button_save)
-        )
     }
 }
 

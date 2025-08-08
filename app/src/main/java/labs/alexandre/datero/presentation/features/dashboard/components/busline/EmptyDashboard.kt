@@ -66,6 +66,7 @@ fun EmptyDashboard(
         PrimaryButton(
             text = stringResource(R.string.dashboard_empty_text_button),
             onClick = { onIntent(DashboardIntent.OnClickAddBusLine) },
+            modifier = Modifier.fillMaxWidth(),
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.Add,
