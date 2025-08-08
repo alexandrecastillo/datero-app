@@ -2,7 +2,6 @@ package labs.alexandre.datero.domain.usecase
 
 import labs.alexandre.datero.domain.constants.BusinessRules
 import labs.alexandre.datero.domain.constants.Times
-import labs.alexandre.datero.domain.model.BusMark
 import labs.alexandre.datero.domain.model.ElapsedTime
 import labs.alexandre.datero.domain.model.TimeUnit
 import labs.alexandre.datero.domain.provider.SystemTimeProvider
@@ -20,12 +19,12 @@ class CalculateElapsedTimeUseCase @Inject constructor(
 
     private fun getElapsedTimeInMs(param: Param): Long {
         return when (param) {
-            is Param.Current -> {
+            is Param.Ongoing -> {
                 systemTimeProvider.getCurrentTime() - param.busMarkTimestamp
             }
 
-            is Param.Historical -> {
-                param.previewBusMark.timestamp - param.busMark.timestamp
+            is Param.BetweenMarks -> {
+                param.nextMarkTimestamp - param.referenceMarkTimestamp
             }
         }
     }
@@ -56,12 +55,12 @@ class CalculateElapsedTimeUseCase @Inject constructor(
 
 sealed interface Param {
 
-    data class Historical(
-        val previewBusMark: BusMark,
-        val busMark: BusMark
+    data class BetweenMarks(
+        val nextMarkTimestamp: Long,
+        val referenceMarkTimestamp: Long
     ) : Param
 
-    data class Current(
+    data class Ongoing(
         val busMarkTimestamp: Long
     ) : Param
 
