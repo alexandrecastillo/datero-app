@@ -88,7 +88,7 @@ dependencies {
     implementation(libs.android.material)
 
     // Navigation
-    implementation(libs.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
 
     // Hilt DI
     implementation(libs.hilt.android)
@@ -115,13 +115,17 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.mockk)
+    testImplementation(libs.truth)
 
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // Jetpack Compose UI Test
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.ui.test.manifest)
 
+    // Debug
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
