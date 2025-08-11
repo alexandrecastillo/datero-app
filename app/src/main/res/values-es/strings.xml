@@ -9,11 +9,11 @@
 
     <!-- Dashboard -->
     <string name="dashboard_title">Tablero</string>
-    <string name="dashboard_content_description_button_icon_mark">Ícono marcar</string>
+    <string name="dashboard_content_description_button_icon_record">Ícono marcar</string>
     <string name="dashboard_content_description_button_icon_settings">Ícono ajustes</string>
-    <string name="dashboard_button_text_mark">Marcar</string>
-    <string name="dashboard_message_success_on_mark">Tiempo marcado correctamente</string>
-    <string name="dashboard_text_empty_marks">Aún no has marcado buses hoy</string>
+    <string name="dashboard_button_text_record">Marcar</string>
+    <string name="dashboard_message_success_on_record">Tiempo marcado correctamente</string>
+    <string name="dashboard_text_empty_records">Aún no has marcado buses hoy</string>
     <string name="dashboard_elapsed_minutes">min</string>
     <string name="dashboard_elapsed_plus_value">+%1$s</string>
     <plurals name="dashboard_elapsed_hours">
@@ -26,12 +26,12 @@
     <string name="dashboard_empty_description">Agrega tu primera línea de bus para comenzar a controlar sus tiempos</string>
     <string name="dashboard_empty_text_button">Agregar línea de bus</string>
     <string name="dashboard_empty_content_description_icon_button">Ícono agregar</string>
-    <string name="dashboard_dialog_mark_timestamp_button_title_question">¿Qué tan lleno está el bus?</string>
-    <string name="dashboard_dialog_mark_timestamp_button_text_confirm_mark">Marcar</string>
-    <string name="dashboard_dialog_mark_timestamp_content_description_icon_bus_occupancy">Ícono cantidad pasajeros</string>
-    <string name="dashboard_dialog_mark_timestamp_low_occupancy">Poco o nada</string>
-    <string name="dashboard_dialog_mark_timestamp_medium_occupancy">Todos sentados</string>
-    <string name="dashboard_dialog_mark_timestamp_high_occupancy">Totalmente ocupado</string>
+    <string name="dashboard_dialog_record_timestamp_button_title_question">¿Qué tan lleno está el bus?</string>
+    <string name="dashboard_dialog_record_timestamp_button_text_confirm">Marcar</string>
+    <string name="dashboard_dialog_record_timestamp_content_description_icon_bus_occupancy">Ícono cantidad pasajeros</string>
+    <string name="dashboard_dialog_record_timestamp_low_occupancy">Poco o nada</string>
+    <string name="dashboard_dialog_record_timestamp_medium_occupancy">Todos sentados</string>
+    <string name="dashboard_dialog_record_timestamp_high_occupancy">Totalmente ocupado</string>
 
     <!-- Bus Lines -->
     <string name="bus_lines_title">Configurar líneas de bus</string>

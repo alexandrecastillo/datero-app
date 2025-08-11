@@ -85,10 +85,10 @@ fun HeaderBusLine(
         FilledTonalButton(onClick = onClickMark) {
             Icon(
                 painter = painterResource(R.drawable.ic_stopwatch),
-                contentDescription = stringResource(R.string.dashboard_content_description_button_icon_mark)
+                contentDescription = stringResource(R.string.dashboard_content_description_button_icon_record)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = stringResource(R.string.dashboard_button_text_mark), style = MaterialTheme.typography.labelMedium)
+            Text(text = stringResource(R.string.dashboard_button_text_record), style = MaterialTheme.typography.labelMedium)
         }
     }
 }

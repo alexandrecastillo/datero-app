@@ -15,7 +15,7 @@ enum class BusOccupancyUiLevel(
     @StringRes
     val labelRes: Int
 ) {
-    LOW(LowColor, R.drawable.ic_bus_low, R.string.dashboard_dialog_mark_timestamp_low_occupancy),
-    MEDIUM(MediumColor, R.drawable.ic_bus_neutral, R.string.dashboard_dialog_mark_timestamp_medium_occupancy),
-    HIGH(FullColor, R.drawable.ic_bus_full, R.string.dashboard_dialog_mark_timestamp_high_occupancy)
+    LOW(LowColor, R.drawable.ic_bus_low, R.string.dashboard_dialog_record_timestamp_low_occupancy),
+    MEDIUM(MediumColor, R.drawable.ic_bus_neutral, R.string.dashboard_dialog_record_timestamp_medium_occupancy),
+    HIGH(FullColor, R.drawable.ic_bus_full, R.string.dashboard_dialog_record_timestamp_high_occupancy)
 }
