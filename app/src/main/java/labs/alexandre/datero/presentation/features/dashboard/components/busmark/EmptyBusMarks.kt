@@ -32,7 +32,7 @@ fun EmptyBusMarks(
             )
             .padding(vertical = 24.dp, horizontal = 16.dp),
         textAlign = TextAlign.Center,
-        text = stringResource(R.string.dashboard_text_empty_marks),
+        text = stringResource(R.string.dashboard_text_empty_records),
         style = MaterialTheme.typography.bodyMedium
     )
 }

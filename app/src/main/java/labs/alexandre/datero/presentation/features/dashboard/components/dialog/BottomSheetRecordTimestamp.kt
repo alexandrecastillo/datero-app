@@ -83,7 +83,7 @@ fun FormMarkTimestamp(
                 .height(36.dp)
         )
         Text(
-            text = stringResource(R.string.dashboard_dialog_mark_timestamp_button_title_question),
+            text = stringResource(R.string.dashboard_dialog_record_timestamp_button_title_question),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .padding(horizontal = 32.dp)
@@ -104,7 +104,7 @@ fun FormMarkTimestamp(
                 .height(56.dp)
         )
         PrimaryButton(
-            text = stringResource(R.string.dashboard_dialog_mark_timestamp_button_text_confirm_mark),
+            text = stringResource(R.string.dashboard_dialog_record_timestamp_button_text_confirm),
             enabled = state.occupancy != null,
             modifier = Modifier
                 .padding(horizontal = 32.dp)
@@ -186,7 +186,7 @@ fun Answer(
         )
         Icon(
             painter = painterResource(state.iconRes),
-            contentDescription = stringResource(R.string.dashboard_dialog_mark_timestamp_content_description_icon_bus_occupancy),
+            contentDescription = stringResource(R.string.dashboard_dialog_record_timestamp_content_description_icon_bus_occupancy),
             tint = state.color,
             modifier = Modifier.size(28.dp)
         )
