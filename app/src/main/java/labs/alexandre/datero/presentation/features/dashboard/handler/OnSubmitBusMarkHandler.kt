@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.update
 import labs.alexandre.datero.R
 import labs.alexandre.datero.core.resources.StringProvider
 import labs.alexandre.datero.domain.model.BusMark
+import labs.alexandre.datero.domain.provider.SystemTimeProvider
 import labs.alexandre.datero.domain.repository.BusLineRepository
 import labs.alexandre.datero.presentation.features.dashboard.effect.DashboardEffect
 import labs.alexandre.datero.presentation.features.dashboard.intent.DashboardIntent
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class OnSubmitBusMarkHandler @Inject constructor(
     private val busLineRepository: BusLineRepository,
     private val busOccupancyUiMapper: BusOccupancyUiMapper,
-    private val stringProvider: StringProvider
+    private val stringProvider: StringProvider,
+    private val systemTimeProvider: SystemTimeProvider
 ) : DashboardIntentHandler<DashboardIntent.OnSubmitBusMark> {
 
     override suspend fun handle(
@@ -31,7 +33,7 @@ class OnSubmitBusMarkHandler @Inject constructor(
         val busLineId = markTimestampState.busLine.id
         val occupancy = markTimestampState.occupancy ?: return
 
-        val timestamp = System.currentTimeMillis()
+        val timestamp = systemTimeProvider.getCurrentTime()
 
         busLineRepository.addBusMark(
             BusMark.Undefined(
@@ -43,7 +45,7 @@ class OnSubmitBusMarkHandler @Inject constructor(
         )
 
         state.update { it.copy(markTimestampState = MarkTimestampUiState.DEFAULT) }
-        effect.emit(DashboardEffect.ShowSnackbar(stringProvider.getString(R.string.dashboard_message_success_on_mark)))
+        effect.emit(DashboardEffect.ShowSnackbar(stringProvider.getString(R.string.dashboard_message_success_on_record)))
     }
 
 }
