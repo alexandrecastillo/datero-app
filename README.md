@@ -66,6 +66,11 @@ Datero está diseñada con un enfoque realista, para quienes necesitan agilidad,
 
 ---
 
+## 📲 Descárgala ahora
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/es_badge_web_generic.png" alt="Disponible en Google Play" width="150"/>](https://play.google.com/store/apps/details?id=labs.alexandre.datero)
+
+---
+
 ## 📩 ¿Tienes dudas o sugerencias?
 
 Contáctame:  
