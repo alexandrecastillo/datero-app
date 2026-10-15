@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "labs.alexandre.datero"
-    compileSdk = 35
+    compileSdk = 36
 
     buildFeatures {
         buildConfig = true
@@ -20,9 +20,9 @@ android {
     defaultConfig {
         applicationId = "labs.alexandre.datero"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        targetSdk = 36
+        versionCode = 2
+        versionName = "1.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
